@@ -250,7 +250,7 @@ function randomBitPage() {
 // Intro page
 
 function introPage() {
-    document.getElementById('mainId').innerHTML = '<h1>Welcome to the (frontend) quantum portfolio of Caballero Software Inc.</h1>';
+    document.getElementById('mainId').innerHTML = '<h1>Welcome to the quantum portfolio of Caballero Software Inc.</h1>';
     document.getElementById('mainId').innerHTML += "<h4>This portfolio is open-source. <a href='https://github.com/Caballero-Software-Inc/qfrontend'>Repository in GitHub</a></h4>";
 
     document.getElementById('mainId').innerHTML += "<h4>Disclaimer: Caballero Software Inc. assumes no responsibility for the possible consequences of using the samples from this portfolio. Its use is at the user's own risk.</h4>";
