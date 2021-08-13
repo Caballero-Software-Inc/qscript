@@ -28,6 +28,9 @@ app.listen(port, () => console.log('listening at ' + port));
 app.use(express.static('public'));
 app.use(express.json({ limit: '5mb' }));
 
+
+// Deutsch
+
 function deutschCircuit(f) {
     let s = "circuit = QuantumCircuit(2, 2) \n";
     s += "circuit.x(1) \n";
@@ -54,6 +57,22 @@ function deutschCircuit(f) {
     return s
 }
 
+function deutschAfter(counts) {
+    const keys = Object.keys(counts);
+    let max_val = 0;
+    let max_index = 0;
+
+    for (let j = 0; j < keys.length; j++) {
+        if ((counts[keys[j]]) > max_val) {
+            max_val = counts[keys[j]];
+            max_index = j
+        }
+    };
+    return keys[max_index][1] == '0'
+}
+
+//randomBit
+
 function randomBitCircuit(x) {
     let s = "circuit = QuantumCircuit(1, 1) \n";
     s += "circuit.h(0) \n";
@@ -61,8 +80,13 @@ function randomBitCircuit(x) {
     return s
 }
 
+function randomBitAfter(counts) {
+    return Object.keys(counts)[0] == '1'
+}
 
-app.post('/api', (request, response) => {
+
+
+app.post('/apicircuit', (request, response) => {
     switch (request.body.selection) {
         case "randomBit":
             response.json({ ok: true, circuit: randomBitCircuit(request.body.input) });
@@ -77,6 +101,24 @@ app.post('/api', (request, response) => {
 
 });
 
+
+
+
+
+app.post('/apiafter', (request, response) => {
+    switch (request.body.selection) {
+        case "randomBit":
+            response.json({ ok: true, output: randomBitAfter(request.body.input) });
+            break;
+        case "deutsch":
+            response.json({ ok: true, output: deutschAfter(request.body.input) });
+            break;
+        default:
+            response.json({ ok: false });
+            break;
+    };
+
+});
 
 
 

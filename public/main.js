@@ -19,14 +19,49 @@ function download(filename, text) {
 function afterMeasurement() {
     let files = document.getElementById('selectFiles').files;
     let fr = new FileReader();
+    let options;
     fr.onload = async function (e) {
         counts = await JSON.parse(e.target.result);
         switch (localStorage.getItem("pageqportlio")) {
             case "randomBitPage":
-                randomBitAfter();
+                options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ selection: "randomBit", input: counts })
+                };
+
+                fetch('/apiafter', options).then(async response => {
+                    let respo = await response.json();
+                    if (respo.output) {
+                        document.getElementById('mainId').innerHTML = '<p>Random bit: 1</p><Br></Br>';
+                    } else {
+                        document.getElementById('mainId').innerHTML = '<p>Random bit: 0</p><Br></Br>';
+                    };
+                    document.getElementById('mainId').innerHTML += '<button style="margin:5px;" onclick="backToIntro()">Back to Intro</button>';
+
+                });
                 break;
             case "deutschPage":
-                deutschAfter();
+                options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ selection: "deutsch", input: counts })
+                };
+
+                fetch('/apiafter', options).then(async response => {
+                    let respo = await response.json();
+                    if (respo.output) {
+                        document.getElementById('mainId').innerHTML = '<p>The function is constant.</p><Br></Br>';
+                    } else {
+                        document.getElementById('mainId').innerHTML = '<p>The function is balanced.</p><Br></Br>';
+                    };
+                    document.getElementById('mainId').innerHTML += '<button style="margin:5px;" onclick="backToIntro()">Back to Intro</button>';
+
+                });
                 break;
             default:
                 introPage();
@@ -62,28 +97,6 @@ function removeBackend() {
 
 // Deutsch algorithm
 
-function deutschAfter() {
-    const keys = Object.keys(counts);
-    let max_val = 0;
-    let max_index = 0;
-
-    for (let j = 0; j < keys.length; j++) {
-        if ((counts[keys[j]]) > max_val) {
-            max_val = counts[keys[j]];
-            max_index = j
-        }
-    };
-
-    if (keys[max_index][1] == '0') {
-        document.getElementById('mainId').innerHTML = '<p>The function is constant.</p><Br></Br>';
-    } else {
-        document.getElementById('mainId').innerHTML = '<p>The function is balanced.</p><Br></Br>';
-    };
-
-    document.getElementById('mainId').innerHTML += '<button style="margin:5px;" onclick="backToIntro()">Back to Intro</button>';
-
-}
-
 function deutschCode() {
     const f = [document.getElementsByName('f0')['1'].checked, document.getElementsByName('f1')['1'].checked];
 
@@ -95,7 +108,7 @@ function deutschCode() {
         body: JSON.stringify({ selection: "deutsch", input: f })
     };
 
-    fetch('/api', options).then(async response => {
+    fetch('/apicircuit', options).then(async response => {
         let respo = await response.json();
 
         if (document.getElementsByName('backendradioId')['1'].checked) {
@@ -171,11 +184,6 @@ function deutschPage() {
 
 // Random bit algorithm
 
-function randomBitAfter() {
-    document.getElementById('mainId').innerHTML = '<p>Random bit: ' + Object.keys(counts)[0] + '</p><Br></Br>';
-    document.getElementById('mainId').innerHTML += '<button style="margin:5px;" onclick="backToIntro()">Back to Intro</button>';
-}
-
 
 function randomBitCode() {
     const options = {
@@ -186,7 +194,7 @@ function randomBitCode() {
         body: JSON.stringify({ selection: "randomBit", input: '' })
     };
 
-    fetch('/api', options).then(async response => {
+    fetch('/apicircuit', options).then(async response => {
         let respo = await response.json();
 
         if (document.getElementsByName('backendradioId')['1'].checked) {
